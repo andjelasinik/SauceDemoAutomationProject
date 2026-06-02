@@ -42,6 +42,12 @@ public class LoginPage extends BaseTest {
         submitButton.click();
     }
 
+    public void login(String username, String password) {
+        usernameField.sendKeys(username);
+        passwordField.sendKeys(password);
+        submitButton.click();
+    }
+
 
 
 

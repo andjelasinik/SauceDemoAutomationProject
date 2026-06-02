@@ -32,6 +32,12 @@ public class CartPage extends BaseTest {
     @FindBy(id = "remove-sauce-labs-bike-light")
     public WebElement removeButtonB;
 
+    @FindBy(className = "shopping_cart_link")
+    public WebElement cartIcon;
+
+    @FindBy(id = "checkout")
+    public WebElement checkoutButton;
+
 
     //-----------------------------------
 
@@ -47,6 +53,11 @@ public class CartPage extends BaseTest {
         removeButtonB.click();
     }
 
-    @FindBy(className = "shopping_cart_link")
-    public WebElement cartIcon;
+    public void clickOnCheckoutButton() {
+        checkoutButton.click();
+    }
+
+
+
+
 }
