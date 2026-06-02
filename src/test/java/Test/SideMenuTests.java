@@ -49,7 +49,7 @@ public class SideMenuTests extends BaseTest {
         homePage.login(validUsername, validPassword);
     }
 
-    @Test
+    @Test (priority = 1)
     public void userCanLogout() throws InterruptedException {
 
         //Open side menu
@@ -65,7 +65,7 @@ public class SideMenuTests extends BaseTest {
         Assert.assertEquals(driver.getCurrentUrl(), expectedURL);
     }
 
-    @Test
+    @Test (priority = 10)
     public void userCanNavigateToAllItemsFromSideMenu() {
         //Open and verify that product detail page is opened
         productPage.clickOnAItem("Sauce Labs Bike Light");
@@ -83,7 +83,7 @@ public class SideMenuTests extends BaseTest {
         Assert.assertTrue(productPage.header.getText().contains("Products"));
     }
 
-    @Test
+    @Test(priority = 20)
     public void resetAppStateButtonUpdateProductButtons() {
 
         //Add products and verify cart badge
@@ -102,10 +102,10 @@ public class SideMenuTests extends BaseTest {
         Assert.assertTrue(productPage.addToCartButtonA.isDisplayed());
         Assert.assertTrue(productPage.addToCartButtonB.isDisplayed());
 
-        //Bug report: Reset App State does not update product button state immediately
+        //Bug report: Reset App State does not fully reset UI state on Product page
     }
 
-    @Test
+    @Test (priority = 30)
     public void resetAppStateWorksAfterNavigationToCartAndBack() {
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();

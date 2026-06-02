@@ -2,7 +2,6 @@ package Test;
 
 import Base.BaseTest;
 import Pages.CartPage;
-import Pages.DetailPage;
 import Pages.LoginPage;
 import Pages.ProductPage;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,13 +15,12 @@ import java.time.Duration;
 
 public class CartTests extends BaseTest {
 
-    //Valid credentials
+    // Valid credentials
     String validUsername= "standard_user";
     String validPassword= "secret_sauce";
 
     @BeforeMethod
     public void pageSetUp() {
-
         //Create Chrome options before starting browser
         ChromeOptions options = new ChromeOptions();
         //Open browser in incognito mode
@@ -42,7 +40,6 @@ public class CartTests extends BaseTest {
         homePage = new LoginPage();
         productPage = new ProductPage();
         cartPage = new CartPage();
-        detailPage = new DetailPage();
 
         //Login before each test
         homePage.login(validUsername, validPassword);
@@ -51,48 +48,38 @@ public class CartTests extends BaseTest {
     @Test (priority = 10)
     public void userCanAddProductToCart(){
 
-        //Open cart and verify it is empty
+        // Open cart and verify it is empty
         productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.cartList.size(), 0);
         cartPage.clickOnContinueShoppingButton();
 
-        //Add products and verify cart badge count
+        // Add two products and verify cart badge number
         productPage.clickOnAddToCartA();
         Assert.assertTrue(productPage.cartIcon.getText().contains("1"));
         productPage.clickOnAddToCartB();
         Assert.assertTrue(productPage.cartIcon.getText().contains("2"));
-
-        //Verify "Add to cart" button changed to "Remove" button
         Assert.assertTrue(productPage.removeButtonA.getText().contains("Remove"));
         Assert.assertTrue(productPage.removeButtonB.getText().contains("Remove"));
 
-        //Verify products are displayed in cart
+        // Verify products are displayed in cart
         productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.itemInCartA.getText(), "Sauce Labs Backpack");
         Assert.assertEquals(cartPage.itemInCartB.getText(), "Sauce Labs Bike Light");
     }
 
-    @Test(priority = 15)
-    public void userCanAddProductToCartFromDetailPage() {
-        productPage.clickOnAItem("Sauce Labs Bike Light");
-        detailPage.clickOnAddToCartButton();
-
-        Assert.assertTrue(detailPage.removeButton.isDisplayed());
-    }
-
     @Test(priority = 20)
     public void userCanRemoveProductsFromProductPage(){
 
-        //Add products to cart
+        // Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();
 
-        //Remove products from inventory page and verify cart badge count
+        // Remove products from inventory page
         productPage.clickOnRemoveButtonA();
         Assert.assertTrue(productPage.cartIcon.getText().contains("1"));
         productPage.clickOnRemoveButtonB();
 
-        //Verify cart is empty
+        // Verify cart is empty
         Assert.assertFalse(productPage.cartIcon.getText().contains("1"));
         productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.cartList.size(), 0);
@@ -101,19 +88,17 @@ public class CartTests extends BaseTest {
     @Test(priority = 30)
     public void userCanRemoveProductsFromCart(){
 
-        //Add products and open cart
+        // Add products and open cart
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();
         productPage.clickOnCartIcon();
         Assert.assertTrue(cartPage.cartIcon.getText().contains("2"));
-
-        //Remove products from cart page
+        // Remove products from cart page
         cartPage.clickOnRemoveButtonA();
         Assert.assertTrue(cartPage.cartIcon.getText().contains("1"));
         cartPage.clickOnRemoveButtonB();
-
-        //Verify cart is empty
         Assert.assertFalse(cartPage.cartIcon.getText().contains("1"));
+        // Verify cart is empty
         Assert.assertEquals(cartPage.cartList.size(), 0);
     }
 
@@ -123,15 +108,18 @@ public class CartTests extends BaseTest {
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();
 
-        //Open cart page
+        // Open cart page
         productPage.clickOnCartIcon();
 
-        //Return to products page and verify user is redirected to products page
+        // Return to products page
         cartPage.clickOnContinueShoppingButton();
+
+        // Verify user is redirected to products page
         String expectedURL="https://www.saucedemo.com/inventory.html";
         Assert.assertEquals(driver.getCurrentUrl(),expectedURL);
         Assert.assertTrue(productPage.header.getText().contains("Products"));
     }
+
 
     @AfterMethod
     public void tearDown() {

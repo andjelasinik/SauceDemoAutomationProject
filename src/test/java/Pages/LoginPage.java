@@ -45,9 +45,7 @@ public class LoginPage extends BaseTest {
 
     //login with provided credentials
     public void login(String username, String password) {
-        usernameField.clear();
         usernameField.sendKeys(username);
-        passwordField.clear();
         passwordField.sendKeys(password);
         submitButton.click();
     }

@@ -31,18 +31,11 @@ public class CheckoutPage extends BaseTest {
     //---------------------------------------
 
     public void inputFirstName(String firstName) {
-        firstNameField.clear();
         firstNameField.sendKeys(firstName);
     }
 
     public void inputLastName(String lastName) {
-        lastNameField.clear();
         lastNameField.sendKeys(lastName);
-    }
-
-    public void inputPostalCode(String postalCode) {
-        postalCodeField.clear();
-        postalCodeField.sendKeys(postalCode);
     }
 
     public void clickOnContinueButton() {

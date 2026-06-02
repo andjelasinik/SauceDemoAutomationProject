@@ -15,7 +15,7 @@ import java.time.Duration;
 
 public class CheckoutTests extends BaseTest {
 
-    //Valid credentials
+    // Valid credentials
     String validUsername= "standard_user";
     String validPassword= "secret_sauce";
 
@@ -51,27 +51,29 @@ public class CheckoutTests extends BaseTest {
     @Test (priority = 10)
     public void userCanCheckoutSuccessfully() {
 
-        //Add products to cart
+        // Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();
 
-        //Open cart page
+        // Open cart page
         productPage.clickOnCartIcon();
         wait.until(ExpectedConditions.elementToBeClickable(cartPage.checkoutButton));
 
-        //Start checkout process
+        // Start checkout process
         cartPage.clickOnCheckoutButton();
 
-        //Enter customer information
+        // Enter customer information
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.inputPostalCode("11000");
+        checkoutPage.postalCodeField.sendKeys("11000");
 
-        //Continue to overview page
+        // Continue to overview page
         checkoutPage.clickOnContinueButton();
 
-        //Complete checkout and verify successful order information
+        // Complete checkout
         paymentPage.clickOnFinishButton();
+
+        // Verify successful order confirmation
         Assert.assertTrue(thankYouPage.thankYouMessage.isDisplayed());
         Assert.assertEquals(thankYouPage.completeMessage.getText(), "Checkout: Complete!");
     }
@@ -79,67 +81,67 @@ public class CheckoutTests extends BaseTest {
     @Test (priority = 20)
     public void userCannotCheckoutWithoutFirstName() {
 
-        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
-        //Leave first name field empty
+        // Leave first name field empty
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.inputPostalCode("11000");
+        checkoutPage.postalCodeField.sendKeys("11000");
         checkoutPage.clickOnContinueButton();
 
-        //Verify validation message
+        // Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: First Name is required"));
     }
 
     @Test(priority = 30)
     public void userCannotCheckoutWithoutLastName() {
 
-        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
-        //Leave last name field empty
+        // Leave last name field empty
         checkoutPage.inputFirstName("Andjela");
-        checkoutPage.inputPostalCode("11000");
+        checkoutPage.postalCodeField.sendKeys("11000");
         checkoutPage.clickOnContinueButton();
 
-        //Verify validation message
+        // Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: Last Name is required"));
     }
 
     @Test(priority = 40)
     public void userCannotCheckoutWithoutPostalCode() {
 
-        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
-        //Leave postal code field empty
+        // Leave postal code field empty
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
         checkoutPage.clickOnContinueButton();
 
-        //Verify validation message
+        // Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: Postal Code is required"));
     }
 
     @Test (priority = 50)
     public void userCanCancelCheckout() {
 
-        //Add products to cart and enter checkout information
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
+
+        // Enter checkout information
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.inputPostalCode("11000");
+        checkoutPage.postalCodeField.sendKeys("11000");
 
-        //Cancel checkout process and verify user is returned to cart page
+        // Cancel checkout process
         checkoutPage.clickOnCancelButton();
+
+        // Verify user is returned to cart page
         String expectedURL = "https://www.saucedemo.com/cart.html";
         Assert.assertEquals(driver.getCurrentUrl(), expectedURL);
     }
@@ -147,18 +149,19 @@ public class CheckoutTests extends BaseTest {
     @Test (priority = 60)
     public void userCannotCheckoutWithEmptyCart() {
 
-        //Open empty cart and verify there are no products
+        // Open empty cart and Verify cart contains no products
         productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.cartList.size(), 0);
 
-        //Attempt to start checkout
+        // Attempt to start checkout
         cartPage.clickOnCheckoutButton();
 
-        //Negative test! Checkout should not be available
+        // Negative test - checkout should not be available
         Assert.assertFalse(driver.getCurrentUrl().contains("checkout-step-one"));
 
-        // BUG REPORT: User is able to proceed to checkout with empty cart
+        // Bug report: User is able to proceed to checkout with empty cart
     }
+
 
     @AfterMethod
     public void tearDown() {

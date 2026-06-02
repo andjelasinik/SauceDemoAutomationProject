@@ -54,9 +54,6 @@ public class ProductPage extends BaseTest {
     @FindBy(className = "inventory_item_price")
     public List<WebElement> itemPrices;
 
-    @FindBy(id = "inventory_sidebar_link")
-    public WebElement allItemsButton;
-
     @FindBy(id = "reset_sidebar_link")
     public WebElement resetAppStateButton;
 
@@ -112,12 +109,7 @@ public class ProductPage extends BaseTest {
         highToLowPrice.click();
     }
 
-
-    public void clickOnAllItemsButton() {
-        allItemsButton.click();
-    }
-
-    public void clickOnResetAppStateButton(){
+    public void clickOnResetAppStateButton() {
         resetAppStateButton.click();
     }
 }
