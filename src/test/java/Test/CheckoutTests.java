@@ -65,7 +65,7 @@ public class CheckoutTests extends BaseTest {
         // Enter customer information
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
 
         // Continue to overview page
         checkoutPage.clickOnContinueButton();
@@ -87,7 +87,7 @@ public class CheckoutTests extends BaseTest {
 
         // Leave first name field empty
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
         checkoutPage.clickOnContinueButton();
 
         // Verify validation message
@@ -103,7 +103,7 @@ public class CheckoutTests extends BaseTest {
 
         // Leave last name field empty
         checkoutPage.inputFirstName("Andjela");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
         checkoutPage.clickOnContinueButton();
 
         // Verify validation message
@@ -136,7 +136,7 @@ public class CheckoutTests extends BaseTest {
         // Enter checkout information
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
 
         // Cancel checkout process
         checkoutPage.clickOnCancelButton();

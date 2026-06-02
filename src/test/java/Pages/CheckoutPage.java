@@ -38,6 +38,11 @@ public class CheckoutPage extends BaseTest {
         lastNameField.sendKeys(lastName);
     }
 
+    public void inputPostalCode(String postalCode) {
+        postalCodeField.clear();
+        postalCodeField.sendKeys(postalCode);
+    }
+
     public void clickOnContinueButton() {
         continueButton.click();
     }
