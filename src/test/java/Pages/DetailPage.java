@@ -19,10 +19,20 @@ public class DetailPage extends BaseTest {
     @FindBy(id = "inventory_sidebar_link")
     public WebElement allItemsButton;
 
+    @FindBy(id = "add-to-cart")
+    public WebElement addToCartButton;
+
+    @FindBy(id = "remove")
+    public WebElement removeButton;
+
     //-----------------------
 
     public void clickOnAllItemsButton() {
         allItemsButton.click();
+    }
+
+    public void clickOnAddToCartButton(){
+        addToCartButton.click();
     }
 
 

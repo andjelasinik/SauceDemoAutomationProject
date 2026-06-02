@@ -2,6 +2,7 @@ package Test;
 
 import Base.BaseTest;
 import Pages.CartPage;
+import Pages.DetailPage;
 import Pages.LoginPage;
 import Pages.ProductPage;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -40,6 +41,7 @@ public class CartTests extends BaseTest {
         homePage = new LoginPage();
         productPage = new ProductPage();
         cartPage = new CartPage();
+        detailPage = new DetailPage();
 
         //Login before each test
         homePage.login(validUsername, validPassword);
@@ -64,6 +66,24 @@ public class CartTests extends BaseTest {
         // Verify products are displayed in cart
         productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.itemInCartA.getText(), "Sauce Labs Backpack");
+        Assert.assertEquals(cartPage.itemInCartB.getText(), "Sauce Labs Bike Light");
+    }
+
+    @Test
+    public void userCanAddProductsToCastFromDetailPage() {
+
+        //Open product detail page
+        productPage.clickOnAItem("Sauce Labs Bike Light");
+        // Verify details page is displayed
+        Assert.assertTrue(detailPage.itemDetails.isDisplayed());
+
+        //Add product to cart from detail page and verify product is added
+        detailPage.clickOnAddToCartButton();
+        Assert.assertTrue(productPage.cartIcon.getText().contains("1"));
+        Assert.assertTrue(detailPage.removeButton.getText().contains("Remove"));
+
+        //go to cart page and verify correct product is in cart
+        productPage.clickOnCartIcon();
         Assert.assertEquals(cartPage.itemInCartB.getText(), "Sauce Labs Bike Light");
     }
 
