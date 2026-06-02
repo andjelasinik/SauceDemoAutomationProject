@@ -125,5 +125,4 @@ public class LoginTests extends BaseTest {
     public void tearDown() {
         driver.quit();
     }
-
 }
