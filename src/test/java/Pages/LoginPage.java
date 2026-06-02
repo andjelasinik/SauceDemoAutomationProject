@@ -7,6 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BaseTest {
 
+    //Initialize page elements
     public LoginPage() {
         PageFactory.initElements(driver, this);
     }
@@ -42,8 +43,11 @@ public class LoginPage extends BaseTest {
         submitButton.click();
     }
 
+    //login with provided credentials
     public void login(String username, String password) {
+        usernameField.clear();
         usernameField.sendKeys(username);
+        passwordField.clear();
         passwordField.sendKeys(password);
         submitButton.click();
     }

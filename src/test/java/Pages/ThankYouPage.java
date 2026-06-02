@@ -8,6 +8,7 @@ import static org.openqa.selenium.support.PageFactory.initElements;
 
 public class ThankYouPage extends BaseTest {
 
+    //Initialize page elements
     public ThankYouPage() {
         initElements(driver, this);
     }

@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CartPage extends BaseTest {
 
+    //Initialize page elements
     public CartPage() {
         PageFactory.initElements(driver, this);
     }
@@ -20,6 +21,7 @@ public class CartPage extends BaseTest {
     @FindBy(id = "item_0_title_link")
     public WebElement itemInCartB;
 
+    //List of products currently added to cart
     @FindBy(id = "cart_list")
     public List<WebElement> cartList;
 
@@ -35,6 +37,7 @@ public class CartPage extends BaseTest {
     @FindBy(className = "shopping_cart_link")
     public WebElement cartIcon;
 
+    //Proceed to checkout
     @FindBy(id = "checkout")
     public WebElement checkoutButton;
 

@@ -15,37 +15,28 @@ import java.time.Duration;
 
 public class CheckoutTests extends BaseTest {
 
-    // kredencijali za login (koristim validnog usera sa sajta)
+    //Valid credentials
     String validUsername= "standard_user";
     String validPassword= "secret_sauce";
 
     @BeforeMethod
     public void pageSetUp() {
+        //Create Chrome options before starting browser
         ChromeOptions options = new ChromeOptions();
-
-        // podešavam Chrome pre nego što se pokrene test
-        // koristim ChromeOptions da bih kontrolisala ponašanje browsera
-
-        // otvara Chrome u incognito modu
-        // da nemam cookies, cache i prethodne sesije koje mogu da utiču na test
+        //Open browser in incognito mode
         options.addArguments("--incognito");
-
-        // isključuje notifikacije u browseru
-        // da popup "allow notifications" ne blokira elemente i klikove
+        //Disable browser notification
         options.addArguments("--disable-notifications");
-
-        // gasi blokiranje popup prozora
-        // da Selenium može da vidi i radi sa popupovima ako se pojave
+        //Disable popup blocking
         options.addArguments("--disable-popup-blocking");
 
         driver = new ChromeDriver(options);
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.manage().window().maximize();
-        // otvaram sajt
         driver.navigate().to("https://www.saucedemo.com/");
 
-        // pravim page objekte
+        //Initialize page objects
         homePage = new LoginPage();
         productPage = new ProductPage();
         cartPage = new CartPage();
@@ -53,112 +44,102 @@ public class CheckoutTests extends BaseTest {
         paymentPage = new PaymentPage();
         thankYouPage = new ThankYouPage();
 
-        // login pre testova
+        //Login before each test
         homePage.login(validUsername, validPassword);
     }
 
     @Test (priority = 10)
     public void userCanCheckoutSuccessfully() {
 
-        // dodajem proizvode u cart (2 proizvoda da imam šta da testiram)
+        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnAddToCartB();
 
-        // idem u cart stranicu da proverim proizvode
+        //Open cart page
         productPage.clickOnCartIcon();
-
-        // čekam da checkout dugme bude klikabilno (da se stranica učitala)
         wait.until(ExpectedConditions.elementToBeClickable(cartPage.checkoutButton));
 
-        // klik na checkout da krenem proces kupovine
+        //Start checkout process
         cartPage.clickOnCheckoutButton();
 
-        // unos podataka za checkout formu
+        //Enter customer information
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
 
-        // nastavak na overview stranicu
+        //Continue to overview page
         checkoutPage.clickOnContinueButton();
 
-        // završavam kupovinu
+        //Complete checkout and verify successful order information
         paymentPage.clickOnFinishButton();
-
-        // proveravam da sam uspešno završila checkout
-        // očekujem success poruku nakon završene kupovine
         Assert.assertTrue(thankYouPage.thankYouMessage.isDisplayed());
-
-        // proveravam da je checkout uspešno završen
         Assert.assertEquals(thankYouPage.completeMessage.getText(), "Checkout: Complete!");
     }
 
     @Test (priority = 20)
     public void userCannotCheckoutWithoutFirstName() {
 
+        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
-        // ne unosim first name
+        //Leave first name field empty
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
-
+        checkoutPage.inputPostalCode("11000");
         checkoutPage.clickOnContinueButton();
 
-        // proveravam da sistem ne dozvoljava checkout bez first name
-        // očekujem error poruku
+        //Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: First Name is required"));
     }
 
     @Test(priority = 30)
     public void userCannotCheckoutWithoutLastName() {
 
+        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
+        //Leave last name field empty
         checkoutPage.inputFirstName("Andjela");
-        checkoutPage.postalCodeField.sendKeys("11000");
-
+        checkoutPage.inputPostalCode("11000");
         checkoutPage.clickOnContinueButton();
 
-        // proveravam da sistem ne dozvoljava checkout bez first name
-        // očekujem error poruku
+        //Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: Last Name is required"));
     }
 
     @Test(priority = 40)
     public void userCannotCheckoutWithoutPostalCode() {
 
+        //Add products to cart
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
 
+        //Leave postal code field empty
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-
         checkoutPage.clickOnContinueButton();
 
-        // proveravam da sistem ne dozvoljava checkout bez first name
-        // očekujem error poruku
+        //Verify validation message
         Assert.assertTrue(driver.getPageSource().contains("Error: Postal Code is required"));
     }
 
     @Test (priority = 50)
     public void userCanCancelCheckout() {
 
+        //Add products to cart and enter checkout information
         productPage.clickOnAddToCartA();
         productPage.clickOnCartIcon();
         cartPage.clickOnCheckoutButton();
-
         checkoutPage.inputFirstName("Andjela");
         checkoutPage.inputLastName("Sinik");
-        checkoutPage.postalCodeField.sendKeys("11000");
+        checkoutPage.inputPostalCode("11000");
 
-        // klik na cancel dugme
+        //Cancel checkout process and verify user is returned to cart page
         checkoutPage.clickOnCancelButton();
-
-        // proveravam da sam vraćena na product page
         String expectedURL = "https://www.saucedemo.com/cart.html";
         Assert.assertEquals(driver.getCurrentUrl(), expectedURL);
     }
@@ -166,23 +147,18 @@ public class CheckoutTests extends BaseTest {
     @Test (priority = 60)
     public void userCannotCheckoutWithEmptyCart() {
 
-
-        // idem direktno u cart bez dodavanja proizvoda
+        //Open empty cart and verify there are no products
         productPage.clickOnCartIcon();
-
-        // proveravam da li je cart stvarno prazan
         Assert.assertEquals(cartPage.cartList.size(), 0);
 
-        // pokušavam da krenem checkout
+        //Attempt to start checkout
         cartPage.clickOnCheckoutButton();
 
-        // OVO JE NEGATIVNA PROVERA
-        // očekujem da NE mogu da nastavim dalje
+        //Negative test! Checkout should not be available
         Assert.assertFalse(driver.getCurrentUrl().contains("checkout-step-one"));
 
         // BUG REPORT: User is able to proceed to checkout with empty cart
     }
-
 
     @AfterMethod
     public void tearDown() {

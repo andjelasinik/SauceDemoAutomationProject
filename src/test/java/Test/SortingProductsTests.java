@@ -19,42 +19,33 @@ import java.util.*;
 
 public class SortingProductsTests extends BaseTest {
 
-    // kredencijali za login (koristim validnog usera sa sajta)
+    //Valid credentials
     String validUsername = "standard_user";
     String validPassword = "secret_sauce";
 
     @BeforeMethod
     public void pageSetUp() {
+        //Create Chrome options before starting browser
         ChromeOptions options = new ChromeOptions();
-
-        // podešavam Chrome pre nego što se pokrene test
-        // koristim ChromeOptions da bih kontrolisala ponašanje browsera
-
-        // otvara Chrome u incognito modu
-        // da nemam cookies, cache i prethodne sesije koje mogu da utiču na test
+        //Open browser in incognito mode
         options.addArguments("--incognito");
-
-        // isključuje notifikacije u browseru
-        // da popup "allow notifications" ne blokira elemente i klikove
+        //Disable browser notification
         options.addArguments("--disable-notifications");
-
-        // gasi blokiranje popup prozora
-        // da Selenium može da vidi i radi sa popupovima ako se pojave
+        //Disable popup blocking
         options.addArguments("--disable-popup-blocking");
 
         driver = new ChromeDriver(options);
+
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.manage().window().maximize();
-
-        // otvaram sajt
         driver.navigate().to("https://www.saucedemo.com/");
 
-        // pravim page objekte
+        //Initialize page objects
         homePage = new LoginPage();
         productPage = new ProductPage();
         cartPage = new CartPage();
 
-        // login pre testova
+        //Login before each test
         homePage.login(validUsername, validPassword);
     }
 
@@ -62,54 +53,53 @@ public class SortingProductsTests extends BaseTest {
     @Test(priority = 10)
     public void userCanSortProductByPriceLowToHigh() {
 
-        // biram sort LOW to HIGH
+        //Open sorting dropdown and select low to high sorting
         productPage.clickOnSortDropdownMenu();
         productPage.clickOnLowToHighPrice();
 
+        //Create a list where I will store all displayed product prices
         List<Double> actualPrices = new ArrayList<>();
 
-        // uzimam cene sa ekrana i skidam $
+        //Get prices from the page and convert them from String to Double
         for (WebElement price : productPage.itemPrices) {
             String value = price.getText().replace("$", "");
             actualPrices.add(Double.parseDouble(value));
         }
-
-        // kopiram listu da mogu da je sortiram
+        //Create a copy of the original list
         List<Double> expectedSorted = new ArrayList<>(actualPrices);
 
-        // sortiram od najmanje ka najvećoj
+        //Sort copied list in ascending order
         Collections.sort(expectedSorted);
 
-        // proveravam da li je UI isto tako sortirao
+        //Verify products are sorted correctly
         Assert.assertEquals(actualPrices, expectedSorted);
     }
 
     @Test(priority = 20)
     public void userCanSortProductByPriceHighToLow() {
 
-        // biram sort HIGH to LOW
+        //Open sorting dropdown and select high to low sorting
         productPage.clickOnSortDropdownMenu();
         productPage.clickOnLHighToLowPrice();
 
+        //Create a list where I will store all displayed product prices
         List<Double> actualPrices = new ArrayList<>();
 
-        // uzimam cene sa ekrana
+        //Get prices from the page and convert them from String to Double
         for (WebElement price : productPage.itemPrices) {
             String value = price.getText().replace("$", "");
             actualPrices.add(Double.parseDouble(value));
         }
-
-        // kopiram listu
+        //Create a copy of the original list
         List<Double> expectedSorted = new ArrayList<>(actualPrices);
 
-        // sortiram pa okrenem da bude od najveće ka najmanjoj
+        //Sort copied list in descending order
         Collections.sort(expectedSorted);
         Collections.reverse(expectedSorted);
 
-        // proveravam da li je UI pravilno sortirao
+        //Verify products are sorted correctly
         Assert.assertEquals(actualPrices, expectedSorted);
     }
-
 
     @AfterMethod
     public void tearDown() {

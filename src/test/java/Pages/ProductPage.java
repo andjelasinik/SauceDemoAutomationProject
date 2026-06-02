@@ -10,6 +10,7 @@ import static org.openqa.selenium.support.PageFactory.initElements;
 
 public class ProductPage extends BaseTest {
 
+    //Initialize page elements
     public ProductPage() {
         initElements(driver, this);
     }
@@ -53,9 +54,11 @@ public class ProductPage extends BaseTest {
     @FindBy(className = "inventory_item_price")
     public List<WebElement> itemPrices;
 
+    @FindBy(id = "inventory_sidebar_link")
+    public WebElement allItemsButton;
 
-
-
+    @FindBy(id = "reset_sidebar_link")
+    public WebElement resetAppStateButton;
 
 
     //----------------------------------------------
@@ -107,5 +110,14 @@ public class ProductPage extends BaseTest {
 
     public void clickOnLHighToLowPrice(){
         highToLowPrice.click();
+    }
+
+
+    public void clickOnAllItemsButton() {
+        allItemsButton.click();
+    }
+
+    public void clickOnResetAppStateButton(){
+        resetAppStateButton.click();
     }
 }

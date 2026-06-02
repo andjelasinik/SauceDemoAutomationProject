@@ -7,6 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class PaymentPage extends BaseTest {
 
+    //Initialize page elements
     public PaymentPage () {
         PageFactory.initElements(driver, this);
     }
@@ -19,6 +20,7 @@ public class PaymentPage extends BaseTest {
 
     //------------------------------------------
 
+    //Complete checkout process
     public void clickOnFinishButton() {
         finishButton.click();
     }

@@ -8,15 +8,10 @@ import org.testng.annotations.BeforeClass;
 
 public class BaseTest {
 
-    // WebDriver koristim da bih kontrolisala browser (Chrome)
-    // static znači da ga dijele svi testovi
     public static WebDriver driver;
-
-    // WebDriverWait koristim za čekanje elemenata da budu vidljivi/klikabilni
     public WebDriverWait wait;
 
-    // Page objekti (Page Object Model)
-    // svaki page predstavlja jednu stranicu na sajtu
+    // Shared objects used across all tests
     public LoginPage homePage;
     public ProductPage productPage;
     public CartPage cartPage;
