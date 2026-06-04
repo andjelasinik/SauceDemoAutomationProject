@@ -53,26 +53,28 @@ public class EndToEndTest extends BaseTest {
         homePage.inputPassword(validPassword);
         homePage.clickOnSubmitButton();
 
+        //Verify successful login
         String expectedURL= "https://www.saucedemo.com/inventory.html";
         Assert.assertEquals(driver.getCurrentUrl(), expectedURL);
-
-        //Verify successful login
         Assert.assertTrue(productPage.header.isDisplayed());
         Assert.assertTrue(productPage.header.getText().contains("Products"));
 
         // Add products to cart
         productPage.clickOnAddToCartA();
+        Assert.assertTrue(productPage.cartIcon.getText().contains("1"));
         productPage.clickOnAddToCartB();
+        Assert.assertTrue(productPage.cartIcon.getText().contains("2"));
 
-        // Verify cart badge
-        Assert.assertEquals(productPage.cartIcon.getText(), "2");
+        // Verify "Add to cart" buttons are changed to "Remove"
+        Assert.assertTrue(productPage.removeButtonA.getText().contains("Remove"));
+        Assert.assertTrue(productPage.removeButtonB.getText().contains("Remove"));
 
         // Go to cart
         productPage.clickOnCartIcon();
 
         // Verify items are in cart
-        Assert.assertTrue(cartPage.itemInCartA.isDisplayed());
-        Assert.assertTrue(cartPage.itemInCartB.isDisplayed());
+        Assert.assertEquals(cartPage.itemInCartA.getText(), "Sauce Labs Backpack");
+        Assert.assertEquals(cartPage.itemInCartB.getText(), "Sauce Labs Bike Light");
 
         // Click checkout
         cartPage.clickOnCheckoutButton();
@@ -84,7 +86,6 @@ public class EndToEndTest extends BaseTest {
 
         // Continue to overview
         checkoutPage.clickOnContinueButton();
-
         // Finish purchase
         paymentPage.clickOnFinishButton();
 
